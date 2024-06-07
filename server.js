@@ -6,43 +6,43 @@ const app = express();
 app.use(express.json());
 
 
-mongoose.connect('mongodb+srv://reshmavineesh0909:UFOGOwBgCxtDLLJA@datas.tuvufxa.mongodb.net/?retryWrites=true&w=majority&appName=datas/new')
+mongoose.connect('mongodb://127.0.0.1:27017/todoData')
 .then(()=>console.log("mongodb connected ...................."))
   .catch(err => {
     console.error('MongoDB connection error:', err);
   });
 
-const blogSchema = new mongoose.Schema({
+const todoSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  author: { type: String, required: true },
+  date: { type:String, required: true },
   content: { type: String, required: true }
 });
 
-const Blog = mongoose.model('Blog', blogSchema);
+const Todolist = mongoose.model('Todolist', todoSchema);
 
-app.post('/blog', async (req, res) => {
+app.post('/todo', async (req, res) => {
   try {
-    let newBlog = new Blog(req.body);
-    let newData = await newBlog.save();
+    let newTodo = new Todolist(req.body);
+    let newData = await newTodo.save();
     res.json(newData);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-app.get('/blog', async (req, res) => {
+app.get('/todo', async (req, res) => {
   try {
-    let data = await Blog.find();
+    let data = await Todolist.find();
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-app.get('/blog/:id' , async(req,res) =>{
+app.get('/todo/:id' , async(req,res) =>{
   try {
-    let BlogId = req.params.id
-    let data = await Blog.findById(BlogId)
+    let todoId = req.params.id
+    let data = await Todolist.findById(todoId)
     res.json(data)
   } catch (error) {
     console.log(error);
@@ -51,11 +51,11 @@ app.get('/blog/:id' , async(req,res) =>{
 })
 
 
-app.put('/blog/:id' , async(req,res) =>{
+app.put('/todo/:id' , async(req,res) =>{
   try {
     let data = req.body
     let id = req.params.id
-    let newdata = await Blog.findByIdAndUpdate(id,data ,{new:true})
+    let newdata = await Todolist.findByIdAndUpdate(id,data ,{new:true})
     res.json(newdata)
   } catch (error) {
     console.log(error);
@@ -64,11 +64,11 @@ app.put('/blog/:id' , async(req,res) =>{
 })
 
 
-app.delete('/blog/:id' , async(req,res) =>{
+app.delete('/todo/:id' , async(req,res) =>{
   try {
     let data = req.body
     let id = req.params.id
-    let newdata = await Blog.findByIdAndDelete(id,data ,{new:true})
+    let newdata = await Todolist.findByIdAndDelete(id,data ,{new:true})
     res.json({message:"sucesss"})
   } catch (error) {
     console.log(error);
